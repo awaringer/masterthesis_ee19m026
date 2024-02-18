@@ -1,0 +1,56 @@
+﻿classDiagram
+    class RegisterType{
+        <<enumeration>>
+        +COOLING : auto
+        +HEATING : auto
+    }
+
+    class HeatRecoveryType{
+        <<enumeration>>
+        +ROTARY : auto
+        +PLATE : auto
+        +COMPUNDSYSTEM : auto
+    }
+
+    class Conversion{
+        <<enumeration>>
+        +M3_H_M3_S : auto
+        +M3_S_M3_H : auto
+    }
+    class UnitType{
+        <<enumeration>>
+        +FAN : auto
+        +REGISTER : auto
+        +HEATRECOVERY : auto
+    }
+    
+    class Fan{
+        +volume_flow_nominal : float
+        +electrical_power_nominal: float
+        +sfp_class: int
+        +efficiency : float
+        +unit_type : UnitType = UnitType.FAN
+        +get_sfp_class_efficiency(volume_flow, electrical_power) int
+        +calculate_current_power(volume_flow) float
+    }
+
+    class Register{
+        +register_type : RegisterType
+        +max_power : float
+        +unit_type : UnitType = UnitType.REGISTER
+        +calculate_current_power(volume_flow, sa_temperature_in, sa_temperature_out) float
+        +caclulate_out_temperature(volume_flow, sa_temperature_in, power) float
+    }
+
+    class HeatRecovery{
+        +recovery_type : HeatRecoveryType
+        +temp_oa_nominal : float
+        +temp_sa_nominal : float
+        +temp_ra_nominal : float
+        +heat_exchanger_coefficient : float
+        +unit_type : UnitType = UnitType.HEATRECOVERY
+        +get_heat_exchanger_coefficient() float
+        +calculate_current_power(volume_flow, oa_temperature, sa_temperature) float
+        +calculate_out_temperature(ra_Temperature, oa_temperature) float
+    }
+

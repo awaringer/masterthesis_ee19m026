@@ -1,0 +1,95 @@
+﻿classDiagram
+    class TemperatureType{
+        <<enumeration>>
+        +CELSIUS : auto
+        +KELVIN : auto
+        +FAHRENHEIT : auto
+    }
+
+    class HumidityType{
+        <<enumeration>>
+        +RELATIV : auto
+        +ABSOLUT : auto
+    }
+
+    class MetabolicRate{
+        <<enumeration>>
+        BASE: auto
+        RELAXED_SITTING: auto
+        LIGHT_SEDENTARY: auto
+        LIGHT_STANDING: auto
+        STANDING_MODERATE_ACTIVITY: auto
+    }
+
+    class Converting{
+        <<enumeration>>
+        M3_H_M3_S: auto
+        M3_S_M3_H: auto
+    }
+
+    class RoomLoad{
+        +persons : int
+        +windows: Dict[str, float]
+        +walls: Dict[str, float]
+        +transmission_types: Dict[str, float]
+        -radiation_windows: Dict[str, float]
+        -mean_transmission: dict
+        -cooling_load_factor_radiation: pd.DataFrame
+        -cooling_load_factor_machine: pd.DataFrame
+        -heat_emissions: pd.DataFrame
+        +load_total(internal_load, external_load, support_system) float
+        +load_internal(load_persons, load_machines, load_light, load_diff_temperature) float
+        +load_persons(heat_emissions, load_factor) float
+        +heat_emission_dataframe() pd.DataFrame
+        +load_light(power, simultaneity, room_load_factor, load_factor) float
+        +load_machines(simultaneity, load_factor, sum_machine_power) float
+        +sum_machine_power(power_efficency, load_factors) float
+        +radiation_dataframe() pd.DataFrame
+        +mean_transmission_coefficient() dict
+        +progression_cooling_load() pd.DataFrame
+        +load_diff_temperature(heat_transmission, delta_temp) float
+        +load_external(load_external_walls, load_transmission_windows, load_radiation_windows) float
+        +load_external_walls(heat_transmission, delta_temp_equivalent) float
+        +load_transmission_windows(heat_transmission, external_temperature, room_temperature) float
+        +cooling_load_radiation() pd.DataFrame
+        +get_heat_emission(temperature, activity) float
+        +get_cooling_load_factor_machhine(date_time, room_type_equipment) float
+        +get_cooling_load_factor_radiation(date_time, factor_type) float
+        +get_radiation_window(date_time, orientation) float
+        +load_radiation_windows(cooling_load_factor, radiation_window) float
+
+    }
+
+    class CarbonDioxide{
+        +outdoor_co2 : float
+        +room_co2 : float
+        +room_volume: float
+        +persons_adult: int
+        +persons_chuild: int
+        +calculate_co2_persons(persons_adult, persons_child) float
+        +conversion_flow(flow, direction) float
+        +calculate_room_volume(area, height) None
+        +calculate_co2_concentration(flow_in, co2_generated) float
+    }
+
+    class Pressure{
+        +component: Union[Bow, Reduction, TPiece, Duct, Room, Flap]
+        +volume_flow: float
+        +connector: str
+        +mean_velocity: float
+        +pressure_drop: float
+        -_set_connector() None
+        +set_mean_velocity(volume_flow) None
+        +set_pressure_drop() None
+    }
+
+    class ExportDataToAirComponents{
+        +timestamp: pendulum.datetime
+        +temperature: float
+        +volume_flow: float
+        +pressure_drop: float
+        -mass_flux: float
+        -density: float
+        -set_density(temperature) None
+        -set_mass_flux(volume_flow, density) None
+    }

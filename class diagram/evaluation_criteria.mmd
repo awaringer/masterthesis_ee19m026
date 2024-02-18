@@ -1,0 +1,54 @@
+classDiagram
+    class PersonType{
+        <<enumeration>>
+        +ADULT : auto
+        +CHILD : auto
+    }
+
+    class ActivityType{
+        <<enumeration>>
+        +SITTING : auto
+        +SITTING_SMOKER_LIGHT : auto
+        +SITTING_SMOKER_MEDIUM : auto
+        +SITTING_SMOKER_HEAVY : auto
+        +LOW_ACTIVITY : auto
+        +MEDIUM_ACTIVITY : auto
+        +HIGH_ACTIVITY : auto
+        +CHILD : auto
+    }
+
+    class RoomType{
+        <<enumeration>>
+        +OFFICE : auto
+        +CLASSROOM : auto
+        +KINDERGARTEN : auto
+        +MEETING_ROOM : auto
+    }
+
+    class ThermalComfort{
+        +air_temp: float
+        +mean_radiant_temp: float
+        +air_velocity: float
+        +rel_humidity: float
+        +clothing: float
+        +metabolic_work: float
+        +external_work: float
+        +water_vapour_pressure: float
+        +pmv: float
+        +ppd: float
+        +calculate_water_vapor_pressure()
+        +calculate_surface_temp_clothing(ins_clothing, clothing_factor, internal_heat_body, mean_radient_temp_kelvin)
+        +calculate_pmv()
+        +calculate_ppd()
+    }
+
+    class AirQualityComfort{
+        +persons: Dict[PersonType, float]
+        +activity: Dict[ActivityType, float]
+        +room_type: RoomType
+        +room_data: Room
+        +user_contamination_load()
+        +room_contamination_load()
+        +perceived_air_quality(user_contamination_load, room_contamination_load, volume_flow)
+        +percentage_dissatisfied(perceived_air_quality)
+    }

@@ -1,0 +1,90 @@
+﻿classDiagram
+    class ComponentForm{
+        <<enumeration>>
+        +CIRCLED : auto
+        +RECTANGLED : auto
+    }
+
+    class ComponentType{
+        <<enumeration>>
+        +DUCT : auto
+        +BOW : auto
+        +REDUCTION: auto
+        +TPIECE : auto
+    }
+
+    class ComponentOrientation{
+        <<enumeration>>
+        +VERTICAL : auto
+        +HORIZONTAL : auto
+    }
+
+    class ComponentGeneral{
+        +comp_id : int
+        +shape : Shape
+        +port_a : string
+        +port_b : string
+    }
+
+
+    class ComponentDimension{
+        +general : ComponentGeneral
+        +length : int
+        +width_port_a : int
+        +heigth_port_a : int
+        +diameter_a : int
+        +area_a : int
+        -_calculate_area() void
+    }
+
+    class ComponentData{
+        +dimension : object
+        +zeta_value : float
+        +pressure_drop : float
+        +volume_flow : float
+        +calculate_mean_volume_flow(volume_flow, area_a) double
+        +calculate_pressure_drop(zeta_value) double
+    }
+
+    class Duct{
+        +dimension : ComponentDimension
+        +get_lambda_value() double
+        }
+
+    class Reduction{
+        +dimension : ComponentDimension
+        +width_port_b : int
+        +heigth_port_b : int
+        +diameter_port_b : int
+        +get_zeta_value() double
+    }
+
+    class TPiece{
+        +dimension : ComponentDimension
+        +width_port_b : int
+        +heigth_port_b : int
+        +diameter_port_b : int
+        +width_port_c : int
+        +heigth_port_c : int
+        +diameter_port_c : int
+        +get_zeta_value() double
+    }
+
+    class Bow{
+        +dimension : ComponentDimension
+        +orientation : ComponentOrientation
+        +angle : int
+        +type_ : ComponentType
+        +zeta_value : float
+        -_angle_rad : float
+        -_set_length() void
+        -_get_factor_r_d() float
+        -_set_zeta_value(angle) void
+    }
+
+    ComponentGeneral "1" *-- "1..n" ComponentDimension
+    ComponentDimension "1" *-- "0..n" Duct
+    ComponentDimension "1" *-- "0..n" Reduction
+    ComponentDimension "1" *-- "0..n" TPiece
+    ComponentDimension "1" *-- "0..n" Bow
+

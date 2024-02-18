@@ -1,0 +1,26 @@
+﻿classDiagram
+    class Room{
+        +room_number : str
+        +connector: ComponentRectangled
+        +persons : int
+        +componenttype : ComponentType
+        +heigth : float
+        +area : float
+        +volume_flow : float
+        zeta_value: float
+        +set_area(width, length) float
+        +get_volume(area, heigth) float
+        +set_volume_flow(room_volume, air_change_rate) None
+    }
+
+    class Building{
+        +building_name: str
+        +rooms : list
+        +area : double
+        +volume : double
+        +persons: int
+        +air_flow_total: float
+        +set_sum_propierties() None
+    }
+
+    Building "1" *-- "1..n" Room

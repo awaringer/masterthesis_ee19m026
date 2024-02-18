@@ -1,0 +1,142 @@
+﻿classDiagram
+    class ComponentForm{
+        <<enumeration>>
+        +CIRCLED : auto
+        +RECTANGLED : auto
+    }
+
+    class ComponentType{
+        <<enumeration>>
+        +DUCT : auto
+        +BOW : auto
+        +REDUCTION: auto
+        +TPIECE : auto
+        +AIRTERMINAL: auto
+        +ROOM: auto
+        +FLAP: auto
+        +FAN: auto
+    }
+
+    class ComponentOrientation{
+        <<enumeration>>
+        +VERTICAL : auto
+        +HORIZONTAL : auto
+    }
+
+    class ReductionType{
+        <<enumeration>>
+        +EXTENSION : auto
+        +NARROWING : auto
+    }
+
+    class ComponentAirType{
+        <<enumeration>>
+        +EA : "FOL"
+        +OA : "AUL"
+        +SA : "ZUL"
+        +RA : "ABL"
+    }
+
+    class ComponentGeneral{
+        +component_id : str
+        +orientation : ComponentOrientation
+        +componenttype : ComponentType
+        +airtype : ComponentAirType
+        +port_a : string
+        +port_b : string
+    }
+
+
+    class ComponentCircled{
+        +general : ComponentGeneral
+        +length : float
+        +diameter : int
+        +area : float
+        +shape : ComponentForm = ComponentForm.CIRCLED
+        -_calculate_area() None
+    }
+
+    class ComponentRectangled{
+        +general : ComponentGeneral
+        +length : float
+        +width: int
+        +heigth : int
+        +area : float
+        +shape : ComponentForm = ComponentForm.RECTANGLED
+        -_calculate_area() None
+    }
+
+    class Duct{
+        +connector : Union[ComponentCircled, ComponentRectangled]
+        +mean_velocity : float
+        +componenttype : ComponentType = ComponentType.DUCT
+        +lambda_value : float 
+        -_get_diameter(self) float
+        -_get_reynolds(mean_velocity, diameter) float
+        +set_lambda(reynolds_number) None
+        }
+
+    class Reduction{
+        +connector_a : Union[ComponentCircled, ComponentRectangled]
+        +connector_b : Union[ComponentCircled, ComponentRectangled]
+        +componenttype : ComponentType = ComponentType.REDUCTION
+        +zeta_value : float 
+        -_angle_rad : float
+        +get_zeta_value() None
+    }
+
+    class TPiece{
+        +connector_a : Union[ComponentCircled, ComponentRectangled]
+        +connector_b : Union[ComponentCircled, ComponentRectangled]
+        +componenttype : ComponentType = ComponentType.TPIECE
+        +zeta_value : float
+        -_get_factor_v1_v() float
+        +get_zeta_value() None
+    }
+
+    class Bow{
+        +connector : Union[ComponentCircled, ComponentRectangled]
+        +angle : int
+        +componenttype : ComponentType = ComponentType.BOW
+        +zeta_value : float
+        -_angle_rad : float
+        -_set_length() None
+        -_get_factor_r_d() float
+        -_set_zeta_value(angle) None
+    }
+
+    class Flap{
+        +connector : Union[ComponentCircled, ComponentRectangled]
+        +componenttype : ComponentType = ComponentType.FLAP
+        +alpha_angle: float
+        +get_adjust_angle(volume_flow) float
+        +get_pressure_drop(alpha_angle) float
+    }
+
+    class Airterminal{
+        +connector : Union[ComponentCircled, ComponentRectangled]
+        +componenttype : ComponentType = ComponentType.AIRTERMINAL
+        +zeta_value : float
+    }
+
+    class ComponentList{
+        +obj : List[Union[Duct, Bow, Reduction, TPiece]]
+    }
+
+    ComponentGeneral "1" --> "1..n" ComponentCircled
+    ComponentGeneral "1" --> "1..n" ComponentRectangled
+    ComponentCircled "1" --* "0..n" Duct
+    ComponentRectangled "1" --* "0..n" Duct
+    ComponentCircled "1" --* "0..n" Reduction
+    ComponentRectangled "1" --* "0..n" Reduction
+    ComponentCircled "1" --* "0..n" TPiece
+    ComponentRectangled "1" --* "0..n" TPiece
+    ComponentCircled "1" --* "0..n" Bow
+    ComponentRectangled "1" --* "0..n" Bow
+    ComponentCircled "1" --* "0..n" Flap
+    ComponentRectangled "1" --* "0..n" Flap
+    ComponentCircled "1" --* "0..n" Airterminal
+    ComponentRectangled "1" --* "0..n" Airterminal
+
+
+

@@ -1,0 +1,101 @@
+﻿classDiagram
+    class ImportType{
+        <<enumeration>>
+        +WEATHER : auto
+        +LOAD_PROFILE : auto
+        +USAGE_PROFILE : auto
+        +NETWORK : auto
+        +COMPONENTS: auto
+    }
+
+    class DocumentType{
+        +XLSX : auto
+        +CSV : auto
+        +TM2 : auto
+        +TM3 : auto
+    }
+
+    class ImportData{
+        +dirpath : str
+        +filename : str
+        -fullpath : string
+        +document_type : DocumentType
+        +timezone: str
+        +import_flag : ImportType
+        +data : pd.DataFrame
+        +load(fullpath, import_flag) pd.DataFrame
+    }
+
+    class InterpolateData{
+        +source_data : pd.DataFrame
+        +compared_data : pd.DataFrame
+        +data : pd.DataFrame
+        +interpolate(df_source_data, df_compared_data) pd.DataFrame
+        +build_new_frameset(source, offset, start) pd.DataFrame
+    }
+
+    class WeatherImport{
+        +source : pd.DataFrame
+        +timezone : str
+        +column_export : list
+        +data : pd.DataFrame
+        +set_default() None
+        -__set_dtypes(df) pd.DataFrame
+        -__clean_data_export(df, column_export) pd.DataFrame
+    }
+
+    class LoadProfileImport{
+        +source : pd.DataFrame
+        +timezone : str
+        +first_row : int
+        +column_export : list
+        +column_keep: list
+        +data : pd.DataFrame
+        +set_default() None
+        -__transform_data(df, first_row, column_keep, column_export) pd.DataFrame
+        -__set_dtypes(df) pd.DataFrame
+    }
+
+    class UsageProfileImport{
+        +source : pd.DataFrame
+        +data : pd.DataFrame
+        -__convert_percentage(column_name) pd.DataFrame
+    }
+
+    class NetworkImport{
+        +source : pd.DataFrame
+        +column_list : list
+        +column_dict : dict
+        +column_export : list
+        +data : pd.DataFrame
+        +set_default() None
+        -__filter_dataaframes(df, column_list, column_dict)
+        -__clean_data_export(df, column_export) pd.DataFrame
+    }
+
+    class ComponentImport{
+        +source : pd.DataFrame
+        +column_list : list
+        +column_dict : dict
+        +column_check : dict
+        +column_export : list
+        +rectangled_info : dict
+        +reduction_info : dict
+        +pd_dtypes : dict
+        +data : pd.DataFrame
+        +set_default() None
+        -__filter_dataframes(df, column_list, column_dict) pd.DataFrame
+        -__build_network(df, columns_check, rectangled_info, reduction_info) pd.DataFrame
+        -__set_dtypes(df) pd.DataFrame
+        -__clean_data_export(df, column_export) pd.DataFrame
+    }
+    
+    
+    
+    
+    ImportData "1" *-- "2" InterpolateData
+    ImportData -- WeatherImport
+    ImportData -- ComponentImport
+    ImportData -- LoadProfileImport
+    ImportData -- NetworkImport
+    ImportData -- UsageProfileImport

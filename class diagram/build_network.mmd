@@ -1,0 +1,56 @@
+classDiagram
+
+    class DirectionType{
+        <<enumeration>>
+        +LEFT: auto
+        +RIGTH: auto
+    }
+
+    class Node{
+        +nodeid: Union[Bow, Reduction, TPiece, Duct]
+        +volume_flow: float
+        +pressure_drop: float
+        +left: Node = None
+        +right: Node = None
+        +add(direction, new_node)
+        +postorder_traversal()
+    }
+
+    class AssignComponents{
+        +components: pd.DataFrame
+        +network: pd.DataFrame
+        +component_type: Dict[str, Union[ComponentType, ComponentForm]]
+        +df_assignments: Dict[str, str]
+        +assign_components(row, network, componenttype, airtype, shape_type, df_assignments) Union[Duct, Bow, TPiece, Reduction]
+        +assign_components_general(row, network, componenttype, airtype, df_assignments) ComponentGeneral
+        +assign_component_form(general, row, shape_type, df_assignments) Union[ComponentCircled, ComponentRectangled]
+        +assign_duct(connector) Duct
+        +assign_bow(connector, row, df_assignments) Bow
+        +assign_tpiece(connector_a, connector_b) TPiece
+        +assign_reduction(connector_a, connector_b) Reduction
+        +assign_room(connector) Room
+        +assign_flap(connector) Flap
+        +assign_airterminal(connector) Airterminal
+    }
+
+    class MergeNetwork{
+        +source: pd.DataFrame
+        +target: pd.DataFrame
+        +source_key: str = "nodeid"
+        +target_keys: tuple
+        +data: pd.DataFrame 
+        +set_default()
+        +merge_dataframes(source_data, target_data, src_key, tgt_key) pd.DataFrame
+    }
+
+    class build_network~methodes~{
+        +assign_child_nodes(node_dict)
+        +create_nodes(comp_list, node_ids)
+        +search_node(comp_list, search_value)
+        +get_start_roots(components, network, df_assignments, ahu_definition)
+        +component_list_to_dict(comp_list)
+    }
+
+    build_network -- MergeNetwork
+    build_network -- AssignComponents
+    build_network -- Node
